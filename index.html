@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script>
+        // Agar koi directly index.html khole to login par bhejo
+        // Sirf tab index.html (signup) dikhao jab ?signup=true ho
+        if (window.location.search.indexOf('signup=true') === -1) {
+            window.location.replace('login.html');
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#7F1D1D">
     <meta name="description" content="STPL - Service Tyre Private Limited Complaint Management System">

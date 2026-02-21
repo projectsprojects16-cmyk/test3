@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7F1D1D">
+    <meta name="description" content="STPL - Service Tyre Private Limited Complaint Management System">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="STPL CMS">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <title>Login - STPL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-red: #450A0A;
+            --blood-red: #7F1D1D;
+            --bright-red: #DC2626;
+            --accent-red: #EF4444;
+            --dark-gray: #1A1A1A;
+            --mid-gray: #2D2D2D;
+            --light-gray: #525252;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A3A3A3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-red);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .tyre-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1A0A0A 0%, #450A0A 50%, #1A0A0A 100%);
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.5rem 2rem 2rem 2rem;
+            border-bottom: none;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 10, 10, 0.6);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.4));
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 50px rgba(220, 38, 38, 0.7);
+            }
+        }
+
+        .logo-text {
+            text-align: center;
+        }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-red) 50%, var(--bright-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8));
+            }
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 3px;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .login-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+
+        .login-container {
+            background: rgba(26, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 1.2rem;
+            max-width: 340px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                        0 0 40px rgba(220, 38, 38, 0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.2rem;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            letter-spacing: 1px;
+        }
+
+        .required {
+            color: var(--bright-red);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.5rem 0.7rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .form-input:disabled,
+        .form-select:disabled {
+            background: rgba(0, 0, 0, 0.2);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .password-toggle:hover {
+            color: var(--accent-red);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--bright-red) 0%, var(--blood-red) 100%);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message,
+        .success-message {
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: shake 0.5s ease;
+            font-size: 0.85rem;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid #22C55E;
+            color: #22C55E;
+        }
+
+        .error-message.active,
+        .success-message.active {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .signup-link a {
+            color: var(--accent-red);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: var(--bright-red);
+            text-decoration: underline;
+        }
+
+        .info-message {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3B82F6;
+            color: #60A5FA;
+            padding: 0.8rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .info-message.active {
+            display: block;
+        }
+
+        footer {
+            background: rgba(26, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2rem 3rem;
+            text-align: center;
+            border-top: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-red);
+        }
+
+        @media (max-width: 768px) {
+            .logo-text {
+            text-align: center;
+        }
+
+        .logo-text h1 {
+                font-size: 2rem;
+            }
+
+            .login-container {
+                padding: 1.2rem;
+            }
+
+            header {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tyre-background"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="brand-logo">
+                    <img src="logo.png" alt="STPL Logo">
+                </div>
+                <div class="logo-text">
+                    <h1>STPL</h1>
+                    <p>Service Tyre Private Limited</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="login-section">
+            <div class="login-container">
+                <h2 class="login-title">LOGIN</h2>
+                <p class="login-subtitle" id="subtitle">Enter your credentials to continue</p>
+
+                <div class="info-message" id="infoMessage" style="display: none;"></div>
+                <div class="success-message" id="successMessage"></div>
+                <div class="error-message" id="errorMessage"></div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Employee ID <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="empId"
+                            placeholder="Enter your employee ID"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Role <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="role"
+                            placeholder="Your role"
+                            disabled
+                            readonly
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Password <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            id="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+                    </div>
+
+                    <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                        <label class="form-label">
+                            Confirm Password <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            class="form-input" 
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                        >
+                        <span class="password-toggle" onclick="togglePassword('confirmPassword')">👁️</span>
+                    </div>
+
+                    <button type="submit" class="login-btn" id="submitBtn">
+                        LOGIN
+                    </button>
+                </form>
+
+                <div class="signup-link">
+                    Don't have an account? <a href="index.html">Sign up here</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 STPL - Service Tyre Private Limited. All Rights Reserved.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact Support</a>
+                <a href="#" class="footer-link">About Us</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let isFirstTimeLogin = false;
+        let userData = null;
+
+        // Initialize - Ensure Manager account exists
+        (function initializeManagerAccount() {
+            const managerExists = localStorage.getItem('user_4190123');
+            
+            if (!managerExists) {
+                // Create pre-approved Manager account
+                const managerData = {
+                    empId: '4190123',
+                    fullName: 'STPL',
+                    email: 'pakistanipride689@gmail.com',
+                    mobile: '03406786691',
+                    role: 'Manager',
+                    hostel: 'STPL',
+                    password: 'adminadmin',
+                    passwordSet: true,
+                    approvedAt: new Date().toLocaleString('en-PK', {
+                        year: 'numeric', month: 'short', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    })
+                };
+                localStorage.setItem('user_4190123', JSON.stringify(managerData));
+                console.log('Manager account created successfully');
+            }
+        })();
+
+        // Check URL parameters for employee ID from signup
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const empIdParam = urlParams.get('empId');
+            
+            if (empIdParam) {
+                document.getElementById('empId').value = empIdParam;
+                checkEmployeeId();
+            }
+        });
+
+        // Check employee ID and load role
+        document.getElementById('empId').addEventListener('blur', checkEmployeeId);
+        document.getElementById('empId').addEventListener('input', function() {
+            document.getElementById('role').value = '';
+            document.getElementById('infoMessage').style.display = 'none';
+        });
+
+        function checkEmployeeId() {
+            const empId = document.getElementById('empId').value.trim();
+            const roleInput = document.getElementById('role');
+            const infoMessage = document.getElementById('infoMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const subtitle = document.getElementById('subtitle');
+            const submitBtn = document.getElementById('submitBtn');
+            const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+
+            if (!empId) {
+                roleInput.value = '';
+                return;
+            }
+
+            // Check if user exists
+            const userDataStr = localStorage.getItem('user_' + empId);
+            
+            if (!userDataStr) {
+                errorMessage.textContent = 'Employee ID not found! Please sign up first.';
+                errorMessage.classList.add('active');
+                roleInput.value = '';
+                setTimeout(() => {
+                    errorMessage.classList.remove('active');
+                }, 4000);
+                return;
+            }
+
+            userData = JSON.parse(userDataStr);
+            roleInput.value = userData.role;
+
+            // Check if password is already set
+            if (!userData.passwordSet) {
+                isFirstTimeLogin = true;
+                infoMessage.textContent = '🔐 First time login: Please set your password below (one-time setup)';
+                infoMessage.style.display = 'block';
+                subtitle.textContent = 'Set your password for first login';
+                submitBtn.textContent = 'SET PASSWORD & LOGIN';
+                // Show confirm password field
+                confirmPasswordGroup.style.display = 'block';
+                confirmPasswordInput.required = true;
+            } else {
+                isFirstTimeLogin = false;
+                infoMessage.style.display = 'none';
+                subtitle.textContent = 'Enter your credentials to continue';
+                submitBtn.textContent = 'LOGIN';
+                // Hide confirm password field
+                confirmPasswordGroup.style.display = 'none';
+                confirmPasswordInput.required = false;
+                confirmPasswordInput.value = '';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const empId = document.getElementById('empId').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Clear previous messages
+            errorMessage.classList.remove('active');
+            successMessage.classList.remove('active');
+
+            if (!userData) {
+                errorMessage.textContent = 'Please enter a valid Employee ID first.';
+                errorMessage.classList.add('active');
+                return;
+            }
+
+            // Password validation
+            if (password.length < 6) {
+                errorMessage.textContent = 'Password must be at least 6 characters long.';
+                errorMessage.classList.add('active');
+                setTimeout(() => errorMessage.classList.remove('active'), 3000);
+                return;
+            }
+
+            // First time login - set password (requires confirm password)
+            if (isFirstTimeLogin) {
+                // Check if passwords match
+                if (password !== confirmPassword) {
+                    errorMessage.textContent = 'Passwords do not match! Please try again.';
+                    errorMessage.classList.add('active');
+                    setTimeout(() => errorMessage.classList.remove('active'), 3000);
+                    return;
+                }
+
+                // Set password
+                userData.password = password;
+                userData.passwordSet = true;
+                localStorage.setItem('user_' + empId, JSON.stringify(userData));
+
+                successMessage.textContent = '✓ Password set successfully! Logging you in...';
+                successMessage.classList.add('active');
+
+                // Login after 1.5 seconds
+                setTimeout(() => {
+                    sessionStorage.setItem('currentUser', JSON.stringify(userData));
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } else {
+                // Regular login - verify password (no confirm password needed)
+                if (userData.password !== password) {
+                    errorMessage.textContent = 'Incorrect password! Please try again.';
+                    errorMessage.classList.add('active');
+                    setTimeout(() => errorMessage.classList.remove('active'), 3000);
+                    return;
+                }
+
+                successMessage.textContent = '✓ Login successful! Welcome back, ' + userData.fullName + '!';
+                successMessage.classList.add('active');
+
+                // Login after 1 second
+                setTimeout(() => {
+                    sessionStorage.setItem('currentUser', JSON.stringify(userData));
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            }
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+            } else {
+                field.type = 'password';
+            }
+        }
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(() => { console.log('ServiceWorker registration successful'); })
+                    .catch((err) => { console.log('ServiceWorker registration failed: ', err); });
+            });
+        }
+    </script>
+</body>
+</html>

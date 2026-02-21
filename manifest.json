@@ -1,0 +1,24 @@
+{
+  "name": "STPL Complaint Management System",
+  "short_name": "STPL CMS",
+  "description": "Service Tyre Private Limited - Complaint Management System",
+  "start_url": "/login.html",
+  "display": "standalone",
+  "background_color": "#450A0A",
+  "theme_color": "#7F1D1D",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

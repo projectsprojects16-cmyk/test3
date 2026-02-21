@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7F1D1D">
+    <title>Hostel Export - STPL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-red: #450A0A;
+            --blood-red: #7F1D1D;
+            --bright-red: #DC2626;
+            --accent-red: #EF4444;
+            --dark-gray: #1A1A1A;
+            --mid-gray: #2D2D2D;
+            --light-gray: #525252;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A3A3A3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-red);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .tyre-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1A0A0A 0%, #450A0A 50%, #1A0A0A 100%);
+        }
+
+        /* Layout Wrapper */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 2rem 2rem 2rem;
+            border-bottom: none;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 10, 10, 0.6);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .brand-logo {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.4));
+        }
+
+        .logo-text {
+            text-align: center;
+        }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-red) 50%, var(--bright-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
+        }
+
+        .logo-text p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 1rem 1rem 2rem;
+        }
+
+        .export-card {
+            background: rgba(26, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 20px;
+            padding: 1.5rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.08);
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin-bottom: 1.2rem;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-red);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            letter-spacing: 2.5px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220,38,38,0.35), transparent);
+            margin: 1rem 0;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.7rem;
+            margin-top: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.9rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.45rem 0.7rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.2);
+        }
+
+        .export-btn {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.8rem;
+            background: linear-gradient(135deg, var(--bright-red), var(--blood-red));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+        }
+
+        .export-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Print Styles for PDF */
+        .print-content {
+            display: none;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-content, .print-content * {
+                visibility: visible;
+            }
+            .print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: block !important;
+                padding: 20px;
+                font-family: Arial, sans-serif;
+                color: #000;
+            }
+            .print-content h2 {
+                color: #000;
+                margin-bottom: 20px;
+                text-align: center;
+                font-size: 24px;
+                border-bottom: 2px solid #DC2626;
+                padding-bottom: 10px;
+            }
+            .print-content table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            .print-content table tr:nth-child(even) {
+                background: #f5f5f5;
+            }
+            .print-content table td {
+                padding: 10px;
+                border: 1px solid #ddd;
+                font-size: 14px;
+            }
+            .print-content table td:first-child {
+                font-weight: bold;
+                width: 200px;
+                background: #f0f0f0;
+            }
+            .print-images {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .print-images img {
+                max-width: 45%;
+                height: auto;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .print-header h1 {
+                font-size: 28px;
+                color: #7F1D1D;
+                margin-bottom: 5px;
+            }
+            .print-header p {
+                font-size: 14px;
+                color: #666;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="tyre-background"></div>
+
+<div class="container">
+    <header>
+        <div class="logo-container">
+            <div class="brand-logo">
+                <img src="logo.png" alt="STPL Logo">
+            </div>
+            <div class="logo-text">
+                <h1>STPL</h1>
+                <p>Service Tyre Private Limited</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="export-card">
+            <a href="#" onclick="history.back(); return false;" class="back-btn">
+                Back
+            </a>
+            
+            <h2 class="card-title">HOSTEL EXPORT</h2>
+
+            <!-- PDF Export Section -->
+            <div class="section-label">Export Single Record (PDF with Pictures)</div>
+            <div class="form-group">
+                <label class="form-label">Employee ID</label>
+                <input type="text" id="pdfEmpId" class="form-input" placeholder="Enter Employee ID">
+            </div>
+            <button class="export-btn" onclick="exportPDF()">EXPORT PDF</button>
+
+            <div class="divider"></div>
+
+            <!-- CSV Export Section -->
+            <div class="section-label">Export Multiple Records (CSV - Data Only)</div>
+            <div class="form-group">
+                <label class="form-label">Employee ID (Optional)</label>
+                <input type="text" id="csvEmpId" class="form-input" placeholder="Leave blank for all records">
+            </div>
+            <div class="form-group">
+                <label class="form-label">From Date</label>
+                <input type="date" id="fromDate" class="form-input">
+            </div>
+            <div class="form-group">
+                <label class="form-label">To Date</label>
+                <input type="date" id="toDate" class="form-input">
+            </div>
+            <button class="export-btn" onclick="exportCSV()">EXPORT CSV</button>
+        </div>
+    </div>
+</div>
+
+<!-- Print Content Area -->
+<div class="print-content" id="printContent"></div>
+
+<script>
+(function(){
+    // Get Hostel Records from localStorage
+    function getHostelRecords() {
+        const records = localStorage.getItem('hostelRecords');
+        if (records) {
+            return JSON.parse(records);
+        }
+        return [];
+    }
+
+    function getLoggedInUser() {
+        const user = localStorage.getItem('loggedInUser');
+        return user || 'Admin';
+    }
+
+    // PDF Export with Pictures
+    function exportPDF() {
+        const empId = document.getElementById('pdfEmpId').value.trim();
+        
+        if (!empId) {
+            alert('Please enter Employee ID');
+            return;
+        }
+
+        const records = getHostelRecords();
+        const record = records.find(r => r.empId === empId);
+
+        if (!record) {
+            alert('No data found for Employee ID: ' + empId);
+            return;
+        }
+
+        const loggedInUser = getLoggedInUser();
+        
+        // Create print content with pictures
+        const printContent = `
+            <div class="print-header">
+                <h1>STPL - Hostel Accommodation Record</h1>
+                <p>Service Tyre Private Limited</p>
+            </div>
+            <h2>Employee Details</h2>
+            <table>
+                <tr>
+                    <td>Entered By</td>
+                    <td>${loggedInUser}</td>
+                </tr>
+                <tr>
+                    <td>Employee ID</td>
+                    <td>${record.empId}</td>
+                </tr>
+                <tr>
+                    <td>Employee Name</td>
+                    <td>${record.empName}</td>
+                </tr>
+                <tr>
+                    <td>Hostel Name</td>
+                    <td>${record.hostelName}</td>
+                </tr>
+                <tr>
+                    <td>Department</td>
+                    <td>${record.department}</td>
+                </tr>
+                <tr>
+                    <td>Emergency Contact</td>
+                    <td>${record.emergencyName}</td>
+                </tr>
+                <tr>
+                    <td>Relation</td>
+                    <td>${record.emergencyRelation}</td>
+                </tr>
+                <tr>
+                    <td>Mobile Number</td>
+                    <td>${record.mobile}</td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>${record.address}</td>
+                </tr>
+                <tr>
+                    <td>Join Date</td>
+                    <td>${record.joinDate}</td>
+                </tr>
+                <tr>
+                    <td>Leave Date</td>
+                    <td>${record.leaveDate || 'Active'}</td>
+                </tr>
+            </table>
+            <h2>Attached Pictures</h2>
+            <div class="print-images">
+                ${record.cnicPic ? `<div><p style="text-align:center;font-weight:bold;">CNIC Picture</p><img src="${record.cnicPic}" alt="CNIC Picture"></div>` : '<div style="width:45%;text-align:center;padding:20px;border:2px dashed #ccc;">No CNIC Picture</div>'}
+                ${record.empCardPic ? `<div><p style="text-align:center;font-weight:bold;">Employee Card Picture</p><img src="${record.empCardPic}" alt="Employee Card Picture"></div>` : '<div style="width:45%;text-align:center;padding:20px;border:2px dashed #ccc;">No Employee Card Picture</div>'}
+            </div>
+            <div style="margin-top:30px;text-align:center;font-size:12px;color:#666;">
+                <p>Generated on: ${new Date().toLocaleString()}</p>
+            </div>
+        `;
+
+        document.getElementById('printContent').innerHTML = printContent;
+        document.getElementById('printContent').style.display = 'block';
+        
+        setTimeout(() => {
+            window.print();
+            document.getElementById('printContent').style.display = 'none';
+        }, 500);
+    }
+
+    // CSV Export - Data Only (No Pictures)
+    function exportCSV() {
+        const empId = document.getElementById('csvEmpId').value.trim();
+        const fromDate = document.getElementById('fromDate').value;
+        const toDate = document.getElementById('toDate').value;
+
+        if (!fromDate || !toDate) {
+            alert('Please select both From Date and To Date');
+            return;
+        }
+
+        const records = getHostelRecords();
+        const loggedInUser = getLoggedInUser();
+
+        // Filter records
+        let filteredRecords = records.filter(record => {
+            const joinDate = new Date(record.joinDate);
+            const from = new Date(fromDate);
+            const to = new Date(toDate);
+
+            const dateMatch = joinDate >= from && joinDate <= to;
+            const empIdMatch = !empId || record.empId === empId;
+
+            return dateMatch && empIdMatch;
+        });
+
+        if (filteredRecords.length === 0) {
+            alert('No data found for the selected criteria');
+            return;
+        }
+
+        // Create CSV content - Data in rows (no pictures)
+        const headers = ['Entered By', 'Hostel Name', 'Emp ID', 'Emp Name', 'Department', 'Emergency Contact', 'Relation', 'Mobile', 'Address', 'Join Date', 'Leave Date'];
+        let csvContent = headers.join(',') + '\n';
+
+        filteredRecords.forEach(record => {
+            const row = [
+                loggedInUser,
+                record.hostelName,
+                record.empId,
+                record.empName,
+                record.department,
+                record.emergencyName,
+                record.emergencyRelation,
+                record.mobile,
+                `"${record.address}"`,
+                record.joinDate,
+                record.leaveDate || 'Active'
+            ];
+            csvContent += row.join(',') + '\n';
+        });
+
+        // Download CSV
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'hostel_records_' + new Date().getTime() + '.csv');
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        alert('CSV exported successfully! ' + filteredRecords.length + ' records exported.');
+    }
+
+    // Expose globals
+    window.exportPDF = exportPDF;
+    window.exportCSV = exportCSV;
+})();
+</script>
+</body>
+</html>

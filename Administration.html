@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7F1D1D">
+    <meta name="description" content="STPL - Service Tyre Private Limited Complaint Management System">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="STPL CMS">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <title>Administration - STPL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-red: #450A0A;
+            --blood-red: #7F1D1D;
+            --bright-red: #DC2626;
+            --accent-red: #EF4444;
+            --dark-gray: #1A1A1A;
+            --mid-gray: #2D2D2D;
+            --light-gray: #525252;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A3A3A3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-red);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Background ─── */
+        .tyre-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1A0A0A 0%, #450A0A 50%, #1A0A0A 100%);
+        }
+
+        /* ─── Layout Wrapper ─── */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ─── Header ─── */
+        header {
+            padding: 2rem 3rem 3rem 3rem;
+            border-bottom: none;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 10, 10, 0.6);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.4));
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 50px rgba(220, 38, 38, 0.7);
+            }
+        }
+
+        .logo-text {
+            text-align: center;
+        }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-red) 50%, var(--bright-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8));
+            }
+        }
+
+        .logo-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 3px;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* ─── Back Button ─── */
+        .back-bar {
+            background: rgba(26, 10, 10, 0.85);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+            padding: 0.8rem 2rem;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--accent-red);
+        }
+
+        /* ─── Main Dashboard Section ─── */
+        .dashboard-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .dashboard-card {
+            background: rgba(26, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 20px;
+            padding: 1.8rem 1.5rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.08);
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+
+        .dashboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220,38,38,0.35), transparent);
+            margin: 1.5rem 0;
+        }
+
+        /* ─── Navigation Buttons ─── */
+        .nav-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.2rem;
+            background: rgba(26, 10, 10, 0.6);
+            border: 2px solid rgba(220, 38, 38, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent-red);
+            background: rgba(220, 38, 38, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+
+        .nav-btn-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5));
+        }
+
+        .nav-btn-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+        }
+
+        .nav-btn-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem 1rem;
+            }
+
+            .brand-logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .logo-text h1 {
+                font-size: 1.6rem;
+            }
+
+            .logo-text p {
+                font-size: 0.8rem;
+            }
+
+            .dashboard-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .dashboard-title {
+                font-size: 1.2rem;
+            }
+
+            .nav-btn {
+                padding: 1.2rem 1rem;
+            }
+
+            .nav-btn-icon {
+                font-size: 2rem;
+            }
+
+            .nav-btn-title {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* ─── Animation for buttons ─── */
+        .nav-btn:nth-child(1) {
+            animation: fadeInLeft 0.8s ease-out 0.2s both;
+        }
+
+        .nav-btn:nth-child(2) {
+            animation: fadeInLeft 0.8s ease-out 0.4s both;
+        }
+
+        .nav-btn:nth-child(3) {
+            animation: fadeInLeft 0.8s ease-out 0.6s both;
+        }
+
+        .nav-btn:nth-child(4) {
+            animation: fadeInLeft 0.8s ease-out 0.7s both;
+        }
+
+        .nav-btn:nth-child(5) {
+            animation: fadeInLeft 0.8s ease-out 0.8s both;
+        }
+
+        /* Approval Button Special Styles */
+        .approval-btn {
+            position: relative;
+            border-color: rgba(251, 191, 36, 0.4) !important;
+            background: rgba(69, 10, 10, 0.6) !important;
+        }
+
+        .approval-btn:hover {
+            border-color: rgba(251, 191, 36, 0.8) !important;
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.2) !important;
+        }
+
+        .approval-btn .nav-btn-title {
+            color: #FCD34D;
+        }
+
+        .pending-badge {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: linear-gradient(135deg, #DC2626, #7F1D1D);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #FCD34D;
+            animation: badgePulse 2s ease-in-out infinite;
+            display: none;
+        }
+
+        .pending-badge.visible {
+            display: flex;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 6px rgba(220, 38, 38, 0.5); }
+            50% { transform: scale(1.15); box-shadow: 0 0 14px rgba(220, 38, 38, 0.8); }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Hidden class for role-based visibility */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<div class="tyre-background"></div>
+<div class="container">
+    <!-- ─── Header ─── -->
+    <header>
+        <div class="logo-container">
+            <div class="brand-logo">
+                <img src="logo.png" alt="STPL Logo">
+            </div>
+            <div class="logo-text">
+                <h1>STPL</h1>
+                <p>Service Tyre Private Limited</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── Back Bar ─── -->
+    <div class="back-bar">
+        <a href="dashboard.html" class="back-btn">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    <!-- ─── Dashboard Section ─── -->
+    <div class="dashboard-section">
+        <div class="dashboard-card">
+            <h2 class="dashboard-title">ADMINISTRATION</h2>
+            <p class="dashboard-subtitle">Select a module to continue</p>
+            
+            <div class="divider"></div>
+
+            <div class="nav-buttons">
+                <!-- Hostel Accommodation Button - Manager & Admin only -->
+                <a href="hostel.html" class="nav-btn" id="hostelBtn">
+                    <div class="nav-btn-title">HOSTEL ACCOMMODATION</div>
+                    <div class="nav-btn-subtitle">Employee Registration Form</div>
+                </a>
+
+                <!-- Inventory Management Button - Manager & Admin only -->
+                <a href="inventory.html" class="nav-btn" id="inventoryBtn">
+                    <div class="nav-btn-title">INVENTORY MANAGEMENT</div>
+                    <div class="nav-btn-subtitle">Manage Inventory Records</div>
+                </a>
+
+                <!-- Submitted Complaints Button - All roles -->
+                <a href="Submitted-complaints.html" class="nav-btn">
+                    <div class="nav-btn-title">SUBMITTED COMPLAINTS</div>
+                    <div class="nav-btn-subtitle">View Submitted Complaints</div>
+                </a>
+
+                <!-- New Complaint Button - Manager & Admin only -->
+                <a href="new-complaint.html" class="nav-btn" id="newComplaintBtn">
+                    <div class="nav-btn-title">NEW COMPLAINT</div>
+                    <div class="nav-btn-subtitle">Submit a New Complaint</div>
+                </a>
+
+                <!-- Signup Request Approvals Button - Manager only -->
+                <a href="signup-approvals.html" class="nav-btn approval-btn" id="approvalBtn">
+                    <div class="nav-btn-title">SIGNUP REQUEST APPROVALS</div>
+                    <div class="nav-btn-subtitle">Manage Pending Registrations</div>
+                    <span class="pending-badge" id="pendingBadge">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function(){
+    let currentUser = null;
+
+    // ─── Check Authentication ───
+    function checkAuth() {
+        const userData = sessionStorage.getItem('currentUser');
+        if (!userData) {
+            window.location.href = 'login.html';
+            return false;
+        }
+        currentUser = JSON.parse(userData);
+        applyRoleBasedAccess();
+        return true;
+    }
+
+    // ─── Apply Role-Based Access ───
+    function applyRoleBasedAccess() {
+        if (!currentUser) return;
+
+        const role = currentUser.role;
+        const hostelBtn = document.getElementById('hostelBtn');
+        const inventoryBtn = document.getElementById('inventoryBtn');
+        const newComplaintBtn = document.getElementById('newComplaintBtn');
+        const approvalBtn = document.getElementById('approvalBtn');
+
+        // Manager: Full access (all buttons)
+        // Admin: No Signup Request Approvals
+        // Employee: Only Submitted Complaints (other buttons hidden)
+
+        if (role === 'Manager') {
+            // Manager sees all buttons
+            hostelBtn.classList.remove('hidden');
+            inventoryBtn.classList.remove('hidden');
+            newComplaintBtn.classList.remove('hidden');
+            approvalBtn.classList.remove('hidden');
+        } else if (role === 'Admin') {
+            // Admin: Hostel, Inventory, Submitted Complaints only (No New Complaint, No Signup Approvals)
+            hostelBtn.classList.remove('hidden');
+            inventoryBtn.classList.remove('hidden');
+            newComplaintBtn.classList.add('hidden');
+            approvalBtn.classList.add('hidden');
+        } else if (role === 'Employee') {
+            // Employee: Only Submitted Complaints
+            hostelBtn.classList.add('hidden');
+            inventoryBtn.classList.add('hidden');
+            newComplaintBtn.classList.add('hidden');
+            approvalBtn.classList.add('hidden');
+        }
+    }
+
+    // ─── Update Pending Badge Count ───
+    function updatePendingBadge() {
+        let pendingCount = 0;
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('signup_request_')) {
+                try {
+                    const request = JSON.parse(localStorage.getItem(key));
+                    if (request && request.status === 'pending') {
+                        pendingCount++;
+                    }
+                } catch(e) {}
+            }
+        }
+        const badge = document.getElementById('pendingBadge');
+        if (badge) {
+            badge.textContent = pendingCount;
+            if (pendingCount > 0) {
+                badge.classList.add('visible');
+            } else {
+                badge.classList.remove('visible');
+            }
+        }
+    }
+
+    // ─── Initialize on page load ───
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        updatePendingBadge();
+    });
+})();
+</script>
+</body>
+</html>

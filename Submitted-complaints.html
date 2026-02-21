@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7F1D1D">
+    <meta name="description" content="STPL - Service Tyre Private Limited Complaint Management System">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="STPL CMS">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <title>Submitted Complaints - STPL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-red: #450A0A;
+            --blood-red: #7F1D1D;
+            --bright-red: #DC2626;
+            --accent-red: #EF4444;
+            --dark-gray: #1A1A1A;
+            --mid-gray: #2D2D2D;
+            --light-gray: #525252;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A3A3A3;
+            --pending-color: #FCD34D;
+            --approved-color: #34D399;
+            --rejected-color: #F87171;
+            --withdraw-color: #9CA3AF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #1A0A0A 0%, #450A0A 50%, #1A0A0A 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Header (same as index.html) ─── */
+        header {
+            padding: 2rem 3rem 3rem 3rem;
+            border-bottom: none;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 10, 10, 0.6);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.4));
+        }
+
+        .logo-text { text-align: center; }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-red) 50%, var(--bright-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
+        }
+
+        .logo-text p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 3px;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* ─── Sub Header Bar (back btn + page title) ─── */
+        .sub-header {
+            background: rgba(26, 10, 10, 0.85);
+            border-bottom: 2px solid rgba(220, 38, 38, 0.3);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn {
+            background: rgba(220, 38, 38, 0.15);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            color: var(--accent-red);
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background: rgba(220, 38, 38, 0.3);
+            border-color: var(--accent-red);
+            transform: translateX(-3px);
+        }
+
+        .page-title-wrap { display: flex; flex-direction: column; }
+
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FCD34D 60%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.8px;
+            margin-top: 0.1rem;
+        }
+
+        /* ─── Stats Bar ─── */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            padding: 1.2rem 2rem;
+            background: rgba(26, 10, 10, 0.6);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.15);
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-card {
+            background: rgba(69, 10, 10, 0.5);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 10px;
+            padding: 0.7rem 1.2rem;
+            min-width: 110px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover { transform: translateY(-2px); }
+
+        .stat-card.stat-pending { border-color: rgba(252, 211, 77, 0.4); }
+        .stat-card.stat-approved { border-color: rgba(52, 211, 153, 0.4); }
+        .stat-card.stat-rejected { border-color: rgba(248, 113, 113, 0.4); }
+        .stat-card.stat-withdraw { border-color: rgba(156, 163, 175, 0.4); }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-pending .stat-number { color: var(--pending-color); }
+        .stat-approved .stat-number { color: var(--approved-color); }
+        .stat-rejected .stat-number { color: var(--rejected-color); }
+        .stat-withdraw .stat-number { color: var(--withdraw-color); }
+        .stat-total .stat-number { color: var(--text-primary); }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ─── Filter Tabs ─── */
+        .filter-bar {
+            display: flex;
+            gap: 0.6rem;
+            padding: 1rem 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease-out 0.3s both;
+        }
+
+        .filter-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-right: 0.3rem;
+        }
+
+        .filter-btn {
+            background: rgba(69, 10, 10, 0.5);
+            border: 2px solid rgba(220, 38, 38, 0.2);
+            color: var(--text-secondary);
+            padding: 0.45rem 1rem;
+            border-radius: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: rgba(220, 38, 38, 0.5);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active-all {
+            background: rgba(220, 38, 38, 0.25);
+            border-color: var(--bright-red);
+            color: var(--text-primary);
+        }
+
+        .filter-btn.active-pending {
+            background: rgba(252, 211, 77, 0.15);
+            border-color: var(--pending-color);
+            color: var(--pending-color);
+        }
+
+        .filter-btn.active-approved {
+            background: rgba(52, 211, 153, 0.15);
+            border-color: var(--approved-color);
+            color: var(--approved-color);
+        }
+
+        .filter-btn.active-rejected {
+            background: rgba(248, 113, 113, 0.15);
+            border-color: var(--rejected-color);
+            color: var(--rejected-color);
+        }
+
+        .filter-btn.active-withdraw {
+            background: rgba(156, 163, 175, 0.15);
+            border-color: var(--withdraw-color);
+            color: var(--withdraw-color);
+        }
+
+        /* ─── Main Content ─── */
+        .main-content {
+            padding: 1.5rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ─── Empty State ─── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .empty-state .empty-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .empty-state h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        /* ─── Complaint Cards ─── */
+        .complaints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .complaint-card {
+            background: rgba(26, 10, 10, 0.85);
+            border: 2px solid rgba(220, 38, 38, 0.2);
+            border-radius: 14px;
+            padding: 1.3rem;
+            transition: all 0.3s ease;
+            animation: cardIn 0.5s ease-out both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .complaint-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            border-radius: 14px 0 0 14px;
+        }
+
+        .complaint-card.card-pending::before { background: var(--pending-color); }
+        .complaint-card.card-approved::before { background: var(--approved-color); }
+        .complaint-card.card-rejected::before { background: var(--rejected-color); }
+        .complaint-card.card-withdraw::before { background: var(--withdraw-color); }
+
+        .complaint-card.card-pending { border-color: rgba(252, 211, 77, 0.25); }
+        .complaint-card.card-approved { border-color: rgba(52, 211, 153, 0.25); }
+        .complaint-card.card-rejected { border-color: rgba(248, 113, 113, 0.25); }
+        .complaint-card.card-withdraw { border-color: rgba(156, 163, 175, 0.25); }
+
+        .complaint-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .complaint-type {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .complaint-id {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.1rem;
+            font-weight: 600;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: rgba(252, 211, 77, 0.15);
+            color: var(--pending-color);
+            border-color: rgba(252, 211, 77, 0.4);
+        }
+
+        .status-approved {
+            background: rgba(52, 211, 153, 0.15);
+            color: var(--approved-color);
+            border-color: rgba(52, 211, 153, 0.4);
+        }
+
+        .status-rejected {
+            background: rgba(248, 113, 113, 0.15);
+            color: var(--rejected-color);
+            border-color: rgba(248, 113, 113, 0.4);
+        }
+
+        .status-withdraw {
+            background: rgba(156, 163, 175, 0.15);
+            color: var(--withdraw-color);
+            border-color: rgba(156, 163, 175, 0.4);
+        }
+
+        /* Card Info */
+        .card-info {
+            padding-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .info-row .info-icon { font-size: 0.9rem; width: 18px; }
+        .info-row .info-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .complaint-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .date-time {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-top: 0.6rem;
+            padding-left: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Status Selector */
+        .status-selector {
+            padding-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-selector-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-options {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .status-option {
+            flex: 1;
+            min-width: 70px;
+            padding: 0.5rem 0.4rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border: 2px solid;
+            text-align: center;
+            transition: all 0.25s ease;
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Pending option */
+        .opt-pending {
+            background: rgba(69, 10, 10, 0.4);
+            border-color: rgba(252, 211, 77, 0.25);
+            color: rgba(252, 211, 77, 0.5);
+        }
+
+        .opt-pending:hover, .opt-pending.selected {
+            background: rgba(252, 211, 77, 0.15);
+            border-color: var(--pending-color);
+            color: var(--pending-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(252, 211, 77, 0.2);
+        }
+
+        /* Approve option */
+        .opt-approve {
+            background: rgba(69, 10, 10, 0.4);
+            border-color: rgba(52, 211, 153, 0.25);
+            color: rgba(52, 211, 153, 0.5);
+        }
+
+        .opt-approve:hover, .opt-approve.selected {
+            background: rgba(52, 211, 153, 0.15);
+            border-color: var(--approved-color);
+            color: var(--approved-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
+        }
+
+        /* Reject option */
+        .opt-reject {
+            background: rgba(69, 10, 10, 0.4);
+            border-color: rgba(248, 113, 113, 0.25);
+            color: rgba(248, 113, 113, 0.5);
+        }
+
+        .opt-reject:hover, .opt-reject.selected {
+            background: rgba(248, 113, 113, 0.15);
+            border-color: var(--rejected-color);
+            color: var(--rejected-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.2);
+        }
+
+        /* Withdraw option */
+        .opt-withdraw {
+            background: rgba(69, 10, 10, 0.4);
+            border-color: rgba(156, 163, 175, 0.25);
+            color: rgba(156, 163, 175, 0.5);
+        }
+
+        .opt-withdraw:hover, .opt-withdraw.selected {
+            background: rgba(156, 163, 175, 0.15);
+            border-color: var(--withdraw-color);
+            color: var(--withdraw-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(156, 163, 175, 0.2);
+        }
+
+        /* Delete option */
+        .opt-delete {
+            background: rgba(69, 10, 10, 0.4);
+            border-color: rgba(220, 38, 38, 0.25);
+            color: rgba(220, 38, 38, 0.5);
+        }
+
+        .opt-delete:hover, .opt-delete.selected {
+            background: rgba(220, 38, 38, 0.15);
+            border-color: var(--bright-red);
+            color: var(--bright-red);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        }
+
+        /* Confirm Button */
+        .confirm-btn {
+            width: calc(100% - 0.5rem);
+            margin-left: 0.5rem;
+            padding: 0.65rem;
+            background: linear-gradient(135deg, var(--bright-red), var(--blood-red));
+            border: 2px solid var(--bright-red);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .confirm-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Video Preview */
+        .video-preview {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 10px;
+            margin-top: 0.8rem;
+            margin-bottom: 1rem;
+            margin-left: 0.5rem;
+            border: 2px solid rgba(220, 38, 38, 0.3);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(26, 10, 10, 0.95);
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+            max-width: 320px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.toast-approve {
+            border-color: var(--approved-color);
+            color: var(--approved-color);
+        }
+
+        .toast.toast-reject {
+            border-color: var(--rejected-color);
+            color: var(--rejected-color);
+        }
+
+        .toast.toast-pending {
+            border-color: var(--pending-color);
+            color: var(--pending-color);
+        }
+
+        .toast.toast-withdraw {
+            border-color: var(--withdraw-color);
+            color: var(--withdraw-color);
+        }
+
+        .toast.toast-delete {
+            border-color: var(--bright-red);
+            color: var(--bright-red);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header { padding: 1rem 1rem; }
+            .brand-logo { width: 60px; height: 60px; }
+            .logo-text h1 { font-size: 1.6rem; }
+            .logo-text p { font-size: 0.8rem; }
+            .sub-header { padding: 0.7rem 1rem; }
+            .page-title { font-size: 0.8rem; letter-spacing: 1px; }
+            .main-content { padding: 1rem; }
+            .stats-bar { padding: 1rem; }
+            .filter-bar { padding: 0.8rem 1rem; }
+            .complaints-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ─── Header (same as index.html) ─── -->
+    <header>
+        <div class="logo-container">
+            <div class="brand-logo">
+                <img src="logo.png" alt="STPL Logo">
+            </div>
+            <div class="logo-text">
+                <h1>STPL</h1>
+                <p>Service Tyre Private Limited</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── Sub Header Bar ─── -->
+    <div class="sub-header">
+        <a href="Administration.html" class="back-btn">← BACK</a>
+        <div class="page-title-wrap">
+            <div class="page-title">SUBMITTED COMPLAINTS</div>
+            <div class="page-subtitle">View and Manage Complaints</div>
+        </div>
+    </div>
+
+    <!-- ─── Stats Bar ─── -->
+    <div class="stats-bar">
+        <div class="stat-card stat-total">
+            <div class="stat-number" id="statTotal">0</div>
+            <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card stat-pending">
+            <div class="stat-number" id="statPending">0</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card stat-approved">
+            <div class="stat-number" id="statApproved">0</div>
+            <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card stat-rejected">
+            <div class="stat-number" id="statRejected">0</div>
+            <div class="stat-label">Rejected</div>
+        </div>
+        <div class="stat-card stat-withdraw">
+            <div class="stat-number" id="statWithdraw">0</div>
+            <div class="stat-label">Withdraw</div>
+        </div>
+    </div>
+
+    <!-- ─── Filter Bar ─── -->
+    <div class="filter-bar">
+        <span class="filter-label">FILTER:</span>
+        <button class="filter-btn active-all" onclick="applyFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="applyFilter('Pending', this)">⏳ Pending</button>
+        <button class="filter-btn" onclick="applyFilter('Approved', this)">✅ Approved</button>
+        <button class="filter-btn" onclick="applyFilter('Rejected', this)">❌ Rejected</button>
+        <button class="filter-btn" onclick="applyFilter('Withdraw', this)">↩️ Withdraw</button>
+    </div>
+
+    <!-- ─── Main Content ─── -->
+    <div class="main-content">
+        <div class="complaints-grid" id="complaintsGrid">
+            <!-- Cards rendered by JS -->
+        </div>
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">📋</div>
+            <h3>NO COMPLAINTS FOUND</h3>
+            <p>No complaints match the selected filter.</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let allComplaints = [];
+        let currentFilter = 'all';
+        let currentUser = null;
+        let currentUserRole = null;
+        // Track which option is selected per card before confirming
+        const selectedOptions = {};
+
+        // ─── Check Authentication ───
+        function checkAuth() {
+            const userData = sessionStorage.getItem('currentUser');
+            if (!userData) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            currentUser = JSON.parse(userData);
+            currentUserRole = currentUser.role;
+            return true;
+        }
+
+        // ─── Load all complaints from localStorage ───
+        function loadComplaints() {
+            allComplaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+            
+            // Sort: pending first, then by date
+            allComplaints.sort((a, b) => {
+                const order = { Pending: 0, Approved: 1, Rejected: 2, Withdraw: 3 };
+                return (order[a.status] || 0) - (order[b.status] || 0);
+            });
+            
+            updateStats();
+            renderCards();
+        }
+
+        // ─── Update stats ───
+        function updateStats() {
+            const total = allComplaints.length;
+            const pending = allComplaints.filter(c => c.status === 'Pending').length;
+            const approved = allComplaints.filter(c => c.status === 'Approved').length;
+            const rejected = allComplaints.filter(c => c.status === 'Rejected').length;
+            const withdraw = allComplaints.filter(c => c.status === 'Withdraw').length;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statApproved').textContent = approved;
+            document.getElementById('statRejected').textContent = rejected;
+            document.getElementById('statWithdraw').textContent = withdraw;
+        }
+
+        // ─── Apply filter ───
+        function applyFilter(filter, btn) {
+            currentFilter = filter;
+
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active-all', 'active-pending', 'active-approved', 'active-rejected', 'active-withdraw');
+            });
+            if (filter === 'all') btn.classList.add('active-all');
+            else if (filter === 'Pending') btn.classList.add('active-pending');
+            else if (filter === 'Approved') btn.classList.add('active-approved');
+            else if (filter === 'Rejected') btn.classList.add('active-rejected');
+            else if (filter === 'Withdraw') btn.classList.add('active-withdraw');
+
+            renderCards();
+        }
+
+        // ─── Render Cards ───
+        function renderCards() {
+            const grid = document.getElementById('complaintsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            const filtered = currentFilter === 'all'
+                ? allComplaints
+                : allComplaints.filter(c => c.status === currentFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            grid.innerHTML = filtered.map((complaint, idx) => buildCard(complaint, idx)).join('');
+        }
+
+        // ─── Build single card HTML ───
+        function buildCard(complaint, idx) {
+            const statusClass = `card-${complaint.status.toLowerCase()}`;
+            const statusBadgeClass = `status-${complaint.status.toLowerCase()}`;
+            const statusLabel = complaint.status;
+            const statusEmoji = complaint.status === 'Pending' ? '⏳' : 
+                               complaint.status === 'Approved' ? '✅' : 
+                               complaint.status === 'Rejected' ? '❌' : '↩️';
+
+            const currentSelected = selectedOptions[complaint.id] || complaint.status;
+
+            // Build status options based on role
+            let statusOptionsHTML = '';
+            
+            if (currentUserRole === 'Employee') {
+                // Employee: Only Pending and Withdraw
+                statusOptionsHTML = `
+                    <button class="status-option opt-pending ${currentSelected === 'Pending' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Pending', this)">
+                        ⏳ Pending
+                    </button>
+                    <button class="status-option opt-withdraw ${currentSelected === 'Withdraw' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Withdraw', this)">
+                        ↩️ Withdraw
+                    </button>
+                `;
+            } else if (currentUserRole === 'Admin') {
+                // Admin: Only Approve and Reject (no Withdraw, no Delete)
+                statusOptionsHTML = `
+                    <button class="status-option opt-approve ${currentSelected === 'Approved' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Approved', this)">
+                        ✅ Approve
+                    </button>
+                    <button class="status-option opt-reject ${currentSelected === 'Rejected' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Rejected', this)">
+                        ❌ Reject
+                    </button>
+                `;
+            } else if (currentUserRole === 'Manager') {
+                // Manager: All options including Delete
+                statusOptionsHTML = `
+                    <button class="status-option opt-pending ${currentSelected === 'Pending' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Pending', this)">
+                        ⏳ Pending
+                    </button>
+                    <button class="status-option opt-approve ${currentSelected === 'Approved' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Approved', this)">
+                        ✅ Approve
+                    </button>
+                    <button class="status-option opt-reject ${currentSelected === 'Rejected' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Rejected', this)">
+                        ❌ Reject
+                    </button>
+                    <button class="status-option opt-withdraw ${currentSelected === 'Withdraw' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Withdraw', this)">
+                        ↩️ Withdraw
+                    </button>
+                    <button class="status-option opt-delete ${currentSelected === 'Delete' ? 'selected' : ''}"
+                        onclick="selectStatus('${complaint.id}', 'Delete', this)">
+                        🗑️ Delete
+                    </button>
+                `;
+            }
+
+            // Video preview if available
+            let videoHTML = '';
+            if (complaint.videoData) {
+                videoHTML = `<video class="video-preview" controls><source src="${complaint.videoData}" type="video/webm"></video>`;
+            }
+
+            return `
+            <div class="complaint-card ${statusClass}" id="card-${complaint.id}">
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div>
+                        <div class="complaint-type">${escHtml(complaint.complaintType)}</div>
+                        <div class="complaint-id">ID: ${escHtml(complaint.id)}</div>
+                    </div>
+                    <div class="status-badge ${statusBadgeClass}">${statusEmoji} ${statusLabel}</div>
+                </div>
+
+                <!-- Card Info -->
+                <div class="card-info">
+                    <div class="info-row">
+                        <span class="info-icon">👤</span>
+                        <span class="info-value">${escHtml(complaint.empName)} (${escHtml(complaint.empId)})</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-icon">🏢</span>
+                        <span class="info-value">${escHtml(complaint.department)}</span>
+                    </div>
+                </div>
+
+                <!-- Complaint Description -->
+                <div class="complaint-description">${escHtml(complaint.complaintDescription)}</div>
+
+                ${videoHTML}
+
+                <div class="date-time">🕐 Submitted: ${formatDate(complaint.submittedAt)}</div>
+
+                <!-- Status Selector -->
+                <div class="status-selector">
+                    <div class="status-selector-label">SET STATUS:</div>
+                    <div class="status-options">
+                        ${statusOptionsHTML}
+                    </div>
+                </div>
+
+                <!-- Confirm Button -->
+                <button class="confirm-btn" id="confirm-${complaint.id}"
+                    onclick="confirmStatus('${complaint.id}')"
+                    ${currentSelected === complaint.status ? 'disabled' : ''}>
+                    CONFIRM STATUS
+                </button>
+            </div>`;
+        }
+
+        // ─── Select status option ───
+        function selectStatus(complaintId, newStatus, btnEl) {
+            selectedOptions[complaintId] = newStatus;
+
+            // Highlight selected button in that card
+            const card = document.getElementById('card-' + complaintId);
+            if (card) {
+                card.querySelectorAll('.status-option').forEach(b => b.classList.remove('selected'));
+                btnEl.classList.add('selected');
+            }
+
+            // Enable/disable confirm button
+            const complaint = allComplaints.find(c => c.id === complaintId);
+            const confirmBtn = document.getElementById('confirm-' + complaintId);
+            if (confirmBtn && complaint) {
+                confirmBtn.disabled = (newStatus === complaint.status);
+            }
+        }
+
+        // ─── Confirm status change ───
+        function confirmStatus(complaintId) {
+            const newStatus = selectedOptions[complaintId];
+            if (!newStatus) return;
+
+            const complaint = allComplaints.find(c => c.id === complaintId);
+            if (!complaint || newStatus === complaint.status) return;
+
+            // Handle Delete
+            if (newStatus === 'Delete') {
+                if (!confirm('Are you sure you want to delete this complaint?')) {
+                    delete selectedOptions[complaintId];
+                    renderCards();
+                    return;
+                }
+                
+                // Remove from array
+                allComplaints = allComplaints.filter(c => c.id !== complaintId);
+                localStorage.setItem('complaints', JSON.stringify(allComplaints));
+                
+                showToast(`🗑️ Complaint deleted successfully`, 'delete');
+                
+                // Clear selected option
+                delete selectedOptions[complaintId];
+                
+                // Reload
+                setTimeout(() => {
+                    loadComplaints();
+                }, 300);
+                return;
+            }
+
+            // Update status
+            complaint.status = newStatus;
+            localStorage.setItem('complaints', JSON.stringify(allComplaints));
+
+            // Clear selected option
+            delete selectedOptions[complaintId];
+
+            // Show toast
+            const messages = {
+                Approved: `✅ Complaint approved successfully`,
+                Rejected: `❌ Complaint rejected`,
+                Pending: `⏳ Complaint set to pending`,
+                Withdraw: `↩️ Complaint withdrawn`
+            };
+            const toastType = newStatus.toLowerCase();
+            showToast(messages[newStatus], toastType);
+
+            // Reload
+            setTimeout(() => {
+                loadComplaints();
+            }, 300);
+        }
+
+        // ─── Show Toast ───
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast toast-${type}`;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3500);
+        }
+
+        // ─── Escape HTML ───
+        function escHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ─── Format Date ───
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const date = new Date(dateStr);
+            return date.toLocaleString('en-PK', {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        // ─── Init ───
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkAuth()) {
+                loadComplaints();
+            }
+        });
+    </script>
+</body>
+</html>

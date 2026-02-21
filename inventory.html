@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7F1D1D">
+    <title>Inventory Management - STPL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-red: #450A0A;
+            --blood-red: #7F1D1D;
+            --bright-red: #DC2626;
+            --accent-red: #EF4444;
+            --dark-gray: #1A1A1A;
+            --mid-gray: #2D2D2D;
+            --light-gray: #525252;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A3A3A3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-red);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background */
+        .tyre-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1A0A0A 0%, #450A0A 50%, #1A0A0A 100%);
+        }
+
+        /* Layout Wrapper */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 3rem 3rem 3rem;
+            border-bottom: none;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 10, 10, 0.6);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(220, 38, 38, 0.4));
+        }
+
+        .logo-text {
+            text-align: center;
+        }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-red) 50%, var(--bright-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.8)); }
+        }
+
+        .logo-text p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        /* Button Container */
+        .button-container {
+            max-width: 720px;
+            margin: 0.7rem auto 0;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color .3s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(220,38,38,0.3);
+        }
+
+        .action-btn:hover { 
+            color: var(--accent-red); 
+            border-color: var(--accent-red);
+        }
+
+        .action-btn svg { 
+            width: 16px; 
+            height: 16px; 
+        }
+
+        /* Main Form Section */
+        .form-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 1.2rem 1rem 2.5rem;
+        }
+
+        .form-card {
+            background: rgba(26, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 20px;
+            padding: 1.2rem 1rem;
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.08);
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+
+        /* Card Title */
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 0.15rem;
+        }
+
+        .card-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            margin-bottom: 0.9rem;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220,38,38,0.35), transparent);
+            margin: 0.8rem 0;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.8px;
+        }
+
+        .required { color: var(--bright-red); }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.42rem 0.6rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(220, 38, 38, 0.28);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: border-color .3s, box-shadow .3s, background .3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 18px rgba(220, 38, 38, 0.28);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder { color: var(--text-secondary); }
+
+        .form-input:disabled {
+            background: rgba(0,0,0,0.2);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 70px;
+            line-height: 1.5;
+        }
+
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='14' height='8' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1 1l6 6 6-6' stroke='%23EF4444' stroke-width='2' fill='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 36px;
+        }
+
+        /* Video Upload Section */
+        .video-upload-card {
+            background: rgba(0,0,0,0.25);
+            border: 1px dashed rgba(220,38,38,0.35);
+            border-radius: 12px;
+            padding: 0.9rem;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            transition: border-color .25s;
+        }
+
+        .video-upload-card:hover {
+            border-color: rgba(220,38,38,0.6);
+        }
+
+        .video-upload-card.has-video {
+            border-color: #22C55E;
+            background: rgba(34,197,94,0.08);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+            opacity: 0.8;
+        }
+
+        .upload-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.65rem;
+        }
+
+        .upload-label {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--blood-red), var(--bright-red));
+            color: var(--text-primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 1.2px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .upload-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220,38,38,0.4);
+        }
+
+        .upload-label:active {
+            transform: translateY(0);
+        }
+
+        #videoInput {
+            display: none;
+        }
+
+        #uploadedFileName {
+            display: block;
+            margin-top: 0.6rem;
+            font-size: 0.82rem;
+            color: #22C55E;
+            font-weight: 600;
+        }
+
+        .video-preview-container {
+            margin-top: 0.8rem;
+            display: none;
+        }
+
+        .video-preview-container.active {
+            display: block;
+        }
+
+        .video-preview-container video {
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid rgba(220, 38, 38, 0.3);
+        }
+
+        /* Message Styles */
+        .msg {
+            padding: 0.65rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.9rem;
+            display: none;
+        }
+
+        .msg.active {
+            display: block;
+        }
+
+        .msg.success {
+            background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.4);
+            color: #22C55E;
+        }
+
+        .msg.error {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.4);
+            color: #EF4444;
+        }
+
+        /* Submit Button - Always Enabled */
+        .btn-submit {
+            width: 100%;
+            padding: 0.72rem;
+            background: linear-gradient(135deg, var(--blood-red), var(--bright-red));
+            border: none;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(220,38,38,0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(220,38,38,0.5);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        /* Camera Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: linear-gradient(135deg, #1A0A0A 0%, #2D0A0A 100%);
+            border: 1px solid rgba(220,38,38,0.4);
+            border-radius: 20px;
+            padding: 1.5rem;
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+        }
+
+        .modal-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--accent-red);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(220,38,38,0.2);
+            border: 1px solid rgba(220,38,38,0.4);
+            color: var(--text-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(220,38,38,0.4);
+            transform: rotate(90deg);
+        }
+
+        #cameraPreview,
+        #recordedPreview {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            background: #000;
+            max-height: 300px;
+        }
+
+        #recordedPreview {
+            display: none;
+        }
+
+        .recording-badge {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(220,38,38,0.15);
+            border: 1px solid var(--bright-red);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: var(--bright-red);
+        }
+
+        .recording-badge.active {
+            display: flex;
+        }
+
+        .recording-badge .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--bright-red);
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.65rem 1rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-modal.primary {
+            background: linear-gradient(135deg, var(--blood-red), var(--bright-red));
+            color: var(--text-primary);
+        }
+
+        .btn-modal.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220,38,38,0.4);
+        }
+
+        .btn-modal.secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(220,38,38,0.3);
+        }
+
+        .btn-modal.secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        @media (max-width: 480px) {
+            .form-card {
+                padding: 1rem 0.85rem;
+            }
+            .modal-box {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="tyre-background"></div>
+
+<!-- Container -->
+<div class="container">
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <div class="brand-logo">
+                <img src="logo.png" alt="STPL Logo">
+            </div>
+            <div class="logo-text">
+                <h1>STPL</h1>
+                <p>Service Tyre Private Limited</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Button Container -->
+    <div class="button-container">
+        <a href="#" class="action-btn" id="backBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            BACK
+        </a>
+        <button class="action-btn" id="exportBtn">
+            EXPORT
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+    </div>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <div class="form-card">
+            <h2 class="card-title">INVENTORY ENTRY</h2>
+            <p class="card-subtitle">Add New Item Record</p>
+
+            <!-- Success/Error Messages -->
+            <div class="msg success" id="successMsg"></div>
+            <div class="msg error" id="errorMsg"></div>
+
+            <div class="divider"></div>
+
+            <!-- Form Fields -->
+            <div class="form-group">
+                <label class="form-label">Reference No <span class="required">*</span></label>
+                <input type="text" id="refNo" class="form-input" placeholder="Enter reference number">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Item Name <span class="required">*</span></label>
+                <input type="text" id="itemName" class="form-input" placeholder="Enter item name">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Quantity <span class="required">*</span></label>
+                <input type="number" id="quantity" class="form-input" placeholder="Enter quantity">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Location <span class="required">*</span></label>
+                <input type="text" id="location" class="form-input" placeholder="Enter storage location">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Installation Date <span class="required">*</span></label>
+                <input type="date" id="installDate" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Expiry Date</label>
+                <input type="date" id="expiryDate" class="form-input">
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Video Upload Section -->
+            <div class="video-upload-card" id="videoWrapper">
+                <div class="upload-icon">&#127909;</div>
+                <p class="upload-text">Capture installation video</p>
+                <button type="button" class="upload-label" onclick="openCamera()">
+                    &#127909; OPEN CAMERA
+                </button>
+                <span id="uploadedFileName"></span>
+                <div class="video-preview-container" id="videoPreviewContainer">
+                    <video id="attachedVideo" controls playsinline></video>
+                </div>
+            </div>
+
+            <!-- Submit Button - Always Enabled -->
+            <button class="btn-submit" id="submitBtn" onclick="submitInventory()">
+                SAVE INVENTORY
+            </button>
+        </div>
+    </section>
+</div>
+
+<!-- Camera Modal -->
+<div class="modal-overlay" id="cameraModal">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeCamera()">&times;</button>
+        <h3>&#127909; RECORD VIDEO</h3>
+        <video id="cameraPreview" autoplay playsinline muted></video>
+        <video id="recordedPreview" controls playsinline></video>
+        <div class="recording-badge" id="recBadge"><span class="dot"></span> RECORDING</div>
+        <div class="modal-actions" id="modalActions">
+            <button class="btn-modal primary" id="startRecBtn" onclick="startRecording()">Start Recording</button>
+            <button class="btn-modal secondary" onclick="closeCamera()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+<script>
+(function(){
+    // Authentication Check
+    const loggedInUser = localStorage.getItem('loggedInUser') || 'Admin';
+
+    // State Variables
+    let mediaStream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let recordedBlob = null;
+    let recordedVideoUrl = null;
+
+    // Form Elements
+    const refNoInput = document.getElementById('refNo');
+    const itemNameInput = document.getElementById('itemName');
+    const quantityInput = document.getElementById('quantity');
+    const locationInput = document.getElementById('location');
+    const installDateInput = document.getElementById('installDate');
+    const expiryDateInput = document.getElementById('expiryDate');
+    const videoWrapper = document.getElementById('videoWrapper');
+    const uploadedFileName = document.getElementById('uploadedFileName');
+    const videoPreviewContainer = document.getElementById('videoPreviewContainer');
+    const attachedVideo = document.getElementById('attachedVideo');
+
+    // Camera Modal Functions
+    async function openCamera() {
+        try {
+            // Reset previous recording
+            recordedChunks = [];
+            recordedBlob = null;
+            if (recordedVideoUrl) {
+                URL.revokeObjectURL(recordedVideoUrl);
+                recordedVideoUrl = null;
+            }
+
+            mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'environment' }, 
+                audio: true 
+            });
+            
+            const cameraPreview = document.getElementById('cameraPreview');
+            const recordedPreview = document.getElementById('recordedPreview');
+            
+            cameraPreview.srcObject = mediaStream;
+            cameraPreview.style.display = 'block';
+            recordedPreview.style.display = 'none';
+            
+            document.getElementById('cameraModal').classList.add('active');
+            document.getElementById('recBadge').classList.remove('active');
+            resetModalBtns('idle');
+        } catch(e) {
+            showError('Camera access denied. Please allow camera permission and try again.');
+            console.error('Camera error:', e);
+        }
+    }
+
+    function closeCamera() {
+        stopStream();
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        document.getElementById('cameraModal').classList.remove('active');
+        document.getElementById('recBadge').classList.remove('active');
+    }
+
+    function stopStream() {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(t => t.stop());
+            mediaStream = null;
+        }
+    }
+
+    // Recording Functions
+    function startRecording() {
+        recordedChunks = [];
+        recordedBlob = null;
+        
+        const mimeType = getSupportedMimeType();
+        
+        try {
+            mediaRecorder = new MediaRecorder(mediaStream, { mimeType });
+            
+            mediaRecorder.ondataavailable = function(e) {
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+            
+            mediaRecorder.onstop = handleRecordingStop;
+            mediaRecorder.onerror = function(e) {
+                console.error('MediaRecorder error:', e);
+                showError('Recording error occurred. Please try again.');
+            };
+            
+            mediaRecorder.start(100); // Collect data every 100ms
+            
+            document.getElementById('recBadge').classList.add('active');
+            resetModalBtns('recording');
+        } catch(e) {
+            console.error('Start recording error:', e);
+            showError('Could not start recording. Please try again.');
+        }
+    }
+
+    function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+        }
+        document.getElementById('recBadge').classList.remove('active');
+        resetModalBtns('stopped');
+    }
+
+    function handleRecordingStop() {
+        const mimeType = getSupportedMimeType();
+        recordedBlob = new Blob(recordedChunks, { type: mimeType });
+        recordedVideoUrl = URL.createObjectURL(recordedBlob);
+        
+        const recordedPreview = document.getElementById('recordedPreview');
+        recordedPreview.src = recordedVideoUrl;
+        recordedPreview.style.display = 'block';
+        document.getElementById('cameraPreview').style.display = 'none';
+        
+        resetModalBtns('preview');
+    }
+
+    function saveRecording() {
+        if (!recordedBlob) {
+            showError('No video recorded. Please record first.');
+            return;
+        }
+        
+        const ext = getSupportedMimeType().includes('mp4') ? 'mp4' : 'webm';
+        const fileName = 'recorded_video.' + ext;
+        
+        // Update UI to show video is attached
+        uploadedFileName.textContent = 'Video attached: ' + fileName;
+        videoWrapper.classList.add('has-video');
+        
+        // Show video preview in form
+        attachedVideo.src = recordedVideoUrl;
+        videoPreviewContainer.classList.add('active');
+        
+        closeCamera();
+    }
+
+    function reRecord() {
+        document.getElementById('recordedPreview').style.display = 'none';
+        document.getElementById('cameraPreview').style.display = 'block';
+        document.getElementById('recBadge').classList.remove('active');
+        
+        // Clear previous recording
+        recordedChunks = [];
+        recordedBlob = null;
+        if (recordedVideoUrl) {
+            URL.revokeObjectURL(recordedVideoUrl);
+            recordedVideoUrl = null;
+        }
+        
+        if (!mediaStream || !mediaStream.active) {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: true })
+                .then(s => {
+                    mediaStream = s;
+                    document.getElementById('cameraPreview').srcObject = s;
+                })
+                .catch(e => {
+                    console.error('Camera restart error:', e);
+                });
+        }
+        resetModalBtns('idle');
+    }
+
+    function getSupportedMimeType() {
+        const types = [
+            'video/webm;codecs=vp9,opus',
+            'video/webm;codecs=vp8,opus',
+            'video/webm;codecs=h264,opus',
+            'video/mp4;codecs=h264,aac',
+            'video/webm'
+        ];
+        for (const t of types) {
+            if (MediaRecorder.isTypeSupported(t)) return t;
+        }
+        return 'video/webm';
+    }
+
+    // Modal Button States
+    function resetModalBtns(state) {
+        const c = document.getElementById('modalActions');
+        if (state === 'idle') {
+            c.innerHTML = `<button class="btn-modal primary" onclick="startRecording()">Start Recording</button>
+                           <button class="btn-modal secondary" onclick="closeCamera()">Cancel</button>`;
+        } else if (state === 'recording') {
+            c.innerHTML = `<button class="btn-modal primary" style="background:linear-gradient(135deg,#16a34a,#15803d)" onclick="stopRecording()">Stop Recording</button>`;
+        } else if (state === 'stopped' || state === 'preview') {
+            c.innerHTML = `<button class="btn-modal primary" onclick="saveRecording()">Save Video</button>
+                           <button class="btn-modal secondary" onclick="reRecord()">Re-record</button>
+                           <button class="btn-modal secondary" onclick="closeCamera()">Cancel</button>`;
+        }
+    }
+
+    // Message Functions
+    function showError(msg) {
+        const el = document.getElementById('errorMsg');
+        el.textContent = msg;
+        el.classList.add('active');
+        document.getElementById('successMsg').classList.remove('active');
+        setTimeout(() => el.classList.remove('active'), 4500);
+    }
+
+    function showSuccess(msg) {
+        const el = document.getElementById('successMsg');
+        el.textContent = msg;
+        el.classList.add('active');
+        document.getElementById('errorMsg').classList.remove('active');
+    }
+
+    // Submit Inventory
+    function submitInventory() {
+        // Get values
+        const refNo = refNoInput.value.trim();
+        const itemName = itemNameInput.value.trim();
+        const quantity = quantityInput.value;
+        const location = locationInput.value.trim();
+        const installDate = installDateInput.value;
+        const expiryDate = expiryDateInput.value;
+
+        // Validation
+        if (!refNo) {
+            showError('Reference No is required.');
+            refNoInput.focus();
+            return;
+        }
+        if (!itemName) {
+            showError('Item Name is required.');
+            itemNameInput.focus();
+            return;
+        }
+        if (!quantity) {
+            showError('Quantity is required.');
+            quantityInput.focus();
+            return;
+        }
+        if (!location) {
+            showError('Location is required.');
+            locationInput.focus();
+            return;
+        }
+        if (!installDate) {
+            showError('Installation Date is required.');
+            installDateInput.focus();
+            return;
+        }
+
+        // Convert video to base64 if exists
+        if (recordedBlob) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const videoBase64 = e.target.result;
+                saveRecord(refNo, itemName, quantity, location, installDate, expiryDate, videoBase64);
+            };
+            reader.onerror = function() {
+                showError('Error processing video. Please try again.');
+            };
+            reader.readAsDataURL(recordedBlob);
+        } else {
+            // Save without video
+            saveRecord(refNo, itemName, quantity, location, installDate, expiryDate, null);
+        }
+    }
+
+    function saveRecord(refNo, itemName, quantity, location, installDate, expiryDate, videoBase64) {
+        // Create record object
+        const record = {
+            refNo: refNo,
+            itemName: itemName,
+            quantity: quantity,
+            location: location,
+            installDate: installDate,
+            expiryDate: expiryDate || '',
+            video: videoBase64,
+            time: new Date().toISOString(),
+            user: loggedInUser
+        };
+
+        // Get existing records
+        const existingRecords = JSON.parse(localStorage.getItem('inventoryRecords') || '[]');
+        
+        // Add new record
+        existingRecords.push(record);
+        
+        // Save to localStorage
+        localStorage.setItem('inventoryRecords', JSON.stringify(existingRecords));
+
+        // Show success message
+        showSuccess('Inventory saved successfully');
+
+        // Reset form
+        resetForm();
+    }
+
+    function resetForm() {
+        refNoInput.value = '';
+        itemNameInput.value = '';
+        quantityInput.value = '';
+        locationInput.value = '';
+        installDateInput.value = '';
+        expiryDateInput.value = '';
+        uploadedFileName.textContent = '';
+        videoWrapper.classList.remove('has-video');
+        videoPreviewContainer.classList.remove('active');
+        attachedVideo.src = '';
+        
+        // Clear recording data
+        recordedBlob = null;
+        recordedChunks = [];
+        if (recordedVideoUrl) {
+            URL.revokeObjectURL(recordedVideoUrl);
+            recordedVideoUrl = null;
+        }
+    }
+
+    // Expose Functions to Global Scope
+    window.openCamera = openCamera;
+    window.closeCamera = closeCamera;
+    window.startRecording = startRecording;
+    window.stopRecording = stopRecording;
+    window.saveRecording = saveRecording;
+    window.reRecord = reRecord;
+    window.submitInventory = submitInventory;
+})();
+
+// Export and Back Button Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Back button
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.history.back();
+        });
+    }
+
+    // Export button - Navigate to export page
+    const exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function() {
+            window.location.href = 'inventory_export.html';
+        });
+    }
+});
+</script>
+</body>
+</html>

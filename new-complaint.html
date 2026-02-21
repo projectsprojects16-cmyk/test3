@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#7F1D1D">
+    <meta name="description" content="STPL - Service Tyre Private Limited Complaint Management System">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="STPL CMS">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <title>New Complaint - STPL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-red: #450A0A;
+            --blood-red: #7F1D1D;
+            --bright-red: #DC2626;
+            --accent-red: #EF4444;
+            --dark-gray: #1A1A1A;
+            --mid-gray: #2D2D2D;
+            --light-gray: #525252;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A3A3A3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-red);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ─── Background ─── */
+        .tyre-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #1A0A0A 0%, #450A0A 50%, #1A0A0A 100%);
+        }
+
+        /* ─── Layout Wrapper ─── */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ─── Header ─── */
+        header {
+            padding: 1.2rem 2rem;
+            backdrop-filter: blur(10px);
+            background: rgba(26, 10, 10, 0.7);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to   { transform: translateY(0);     opacity: 1; }
+        }
+
+        .header-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-logo img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(220,38,38,0.4));
+        }
+
+        .logo-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #FFF 0%, var(--accent-red) 50%, var(--bright-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* ─── Button Container ─── */
+        .button-container {
+            max-width: 720px;
+            margin: 0.7rem auto 0;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color .3s;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(220,38,38,0.3);
+        }
+
+        .action-btn:hover { 
+            color: var(--accent-red); 
+            border-color: var(--accent-red);
+        }
+
+        .action-btn svg { 
+            width: 16px; 
+            height: 16px; 
+        }
+
+        /* ─── Main Form Section ─── */
+        .form-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 1.2rem 1rem 2.5rem;
+        }
+
+        .form-card {
+            background: rgba(26, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(220, 38, 38, 0.25);
+            border-radius: 20px;
+            padding: 1.2rem 1rem;
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.08);
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+
+        /* ─── Card Title ─── */
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 0.15rem;
+        }
+
+        .card-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            margin-bottom: 0.9rem;
+        }
+
+        /* ─── Divider ─── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220,38,38,0.35), transparent);
+            margin: 0.8rem 0;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent-red);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ─── Form Group ─── */
+        .form-group {
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            letter-spacing: 0.8px;
+        }
+
+        .required { color: var(--bright-red); }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.42rem 0.6rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(220, 38, 38, 0.28);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: border-color .3s, box-shadow .3s, background .3s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 18px rgba(220, 38, 38, 0.28);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder { color: var(--text-secondary); }
+
+        .form-input:disabled {
+            background: rgba(0,0,0,0.2);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 70px;
+            line-height: 1.5;
+        }
+
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23A3A3A3' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 2rem;
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background: #2D2D2D;
+            color: var(--text-primary);
+        }
+
+        /* ─── Two‑Column Grid ─── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* ─── Video Upload Area ─── */
+        .video-upload-wrapper {
+            border: 1.5px dashed rgba(220,38,38,0.35);
+            border-radius: 12px;
+            padding: 0.7rem;
+            text-align: center;
+            transition: border-color .3s, background .3s;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .video-upload-wrapper:hover {
+            border-color: rgba(220,38,38,0.6);
+            background: rgba(0,0,0,0.35);
+        }
+
+        .video-upload-wrapper.has-video {
+            border-color: #22C55E;
+            background: rgba(34,197,94,0.08);
+        }
+
+        .video-icon {
+            font-size: 1.4rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .video-upload-wrapper p {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .video-upload-wrapper .file-name {
+            color: #22C55E;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.4rem;
+            word-break: break-all;
+        }
+
+        /* ─── Buttons Row ─── */
+        .video-btns {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-video {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(220,38,38,0.4);
+            background: rgba(220,38,38,0.12);
+            color: var(--text-primary);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: background .25s, border-color .25s, transform .15s;
+        }
+
+        .btn-video:hover {
+            background: rgba(220,38,38,0.25);
+            border-color: var(--accent-red);
+            transform: translateY(-1px);
+        }
+
+        .btn-video:active { transform: translateY(0); }
+
+        .btn-video svg { width: 16px; height: 16px; }
+
+        /* ─── Live Camera Modal ─── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.72);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn .25s;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-box {
+            background: #1A0A0A;
+            border: 1px solid rgba(220,38,38,0.3);
+            border-radius: 16px;
+            padding: 1.4rem;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+
+        .modal-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .modal-box .close-modal {
+            float: right;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: color .2s;
+        }
+
+        .modal-box .close-modal:hover { color: var(--accent-red); }
+
+        #cameraPreview {
+            width: 100%;
+            border-radius: 10px;
+            background: #000;
+            max-height: 300px;
+            object-fit: cover;
+        }
+
+        #recordedPreview {
+            width: 100%;
+            border-radius: 10px;
+            background: #000;
+            max-height: 300px;
+            object-fit: cover;
+            display: none;
+            margin-top: 0.6rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        .btn-modal:active { transform: scale(0.96); }
+
+        .btn-modal.primary {
+            background: linear-gradient(135deg, var(--bright-red), var(--blood-red));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(220,38,38,0.4);
+        }
+
+        .btn-modal.primary:hover { box-shadow: 0 6px 20px rgba(220,38,38,0.55); }
+
+        .btn-modal.secondary {
+            background: rgba(0,0,0,0.4);
+            color: var(--text-secondary);
+            border: 1px solid rgba(220,38,38,0.3);
+        }
+
+        .btn-modal.secondary:hover { border-color: var(--accent-red); color: var(--text-primary); }
+
+        .recording-badge {
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--accent-red);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+            justify-content: center;
+        }
+
+        .recording-badge.active { display: flex; }
+
+        .recording-badge .dot {
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%,100% { opacity: 1; }
+            50%     { opacity: 0.3; }
+        }
+
+        /* ─── Submit Button ─── */
+        .submit-btn {
+            width: 100%;
+            padding: 0.6rem;
+            background: linear-gradient(135deg, var(--bright-red) 0%, var(--blood-red) 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .3s;
+            box-shadow: 0 8px 28px rgba(220,38,38,0.4);
+            margin-top: 0.4rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(220,38,38,0.6);
+        }
+
+        .submit-btn:active { transform: translateY(0); }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ─── Messages ─── */
+        .msg {
+            padding: 0.75rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.84rem;
+            display: none;
+            margin-bottom: 1rem;
+            animation: shake .4s ease;
+        }
+
+        .msg.active { display: block; }
+
+        .msg.error {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .msg.success {
+            background: rgba(34,197,94,0.15);
+            border: 1px solid #22C55E;
+            color: #22C55E;
+            animation: none;
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25%     { transform: translateX(-8px); }
+            75%     { transform: translateX(8px); }
+        }
+
+        /* ─── Info Message ─── */
+        .info-msg {
+            padding: 0.75rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.84rem;
+            display: none;
+            margin-bottom: 1rem;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: var(--accent-red);
+        }
+
+        .info-msg.active { display: block; }
+
+        /* ─── Image Preview ─── */
+        .image-preview {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 0.8rem;
+            border: 2px solid rgba(220, 38, 38, 0.3);
+        }
+
+        /* ─── Footer ─── */
+        footer {
+            background: rgba(26,10,10,0.8);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 1px solid rgba(220,38,38,0.15);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 540px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .form-card { padding: 1.4rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="tyre-background"></div>
+
+<div class="container">
+
+    <!-- ─── Header ─── -->
+    <header>
+        <div class="header-inner">
+            <div class="brand-logo">
+                <img src="logo.png" alt="STPL Logo">
+            </div>
+            <div class="logo-text">
+                <h1>STPL</h1>
+                <p>Service Tyre Private Limited</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ─── Button Container ─── -->
+    <div class="button-container" id="buttonContainer">
+        <button class="action-btn" onclick="goBack()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            BACK
+        </button>
+        <button class="action-btn" onclick="window.location.href='Submitted-complaints.html'">
+            VIEW COMPLAINTS
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </button>
+    </div>
+
+    <!-- ─── Main Form Section ─── -->
+    <section class="form-section" id="formSection">
+        <div class="form-card">
+            <h2 class="card-title">NEW COMPLAINT</h2>
+            <p class="card-subtitle">Submit a New Complaint</p>
+
+            <!-- Success Message -->
+            <div class="msg success" id="successMsg"></div>
+            
+            <!-- Info Message -->
+            <div class="info-msg" id="infoMsg"></div>
+
+            <!-- Form Fields -->
+            <form id="complaintForm">
+                <!-- Complaint Type -->
+                <div class="form-group">
+                    <label class="form-label">Complaint Type <span class="required">*</span></label>
+                    <select class="form-select" id="complaintType" required>
+                        <option value="">Select Complaint Type</option>
+                        <option value="Hostel">Hostel</option>
+                        <option value="IT">IT</option>
+                        <option value="HR">HR</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Emp ID -->
+                <div class="form-group">
+                    <label class="form-label">Emp ID <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="empId" placeholder="Enter Employee ID" required>
+                </div>
+
+                <!-- Emp Name -->
+                <div class="form-group">
+                    <label class="form-label">Emp Name <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="empName" placeholder="Enter Employee Name" required>
+                </div>
+
+                <!-- Department -->
+                <div class="form-group">
+                    <label class="form-label">Department <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="department" placeholder="Enter Department" required>
+                </div>
+
+                <!-- Complaint Description -->
+                <div class="form-group">
+                    <label class="form-label">Complaint Description <span class="required">*</span></label>
+                    <textarea class="form-textarea" id="complaintDescription" placeholder="Describe your complaint in detail" required></textarea>
+                </div>
+
+                <!-- Video Upload Area -->
+                <div class="divider"></div>
+                <div class="section-label">🎥 Upload Video Evidence</div>
+
+                <div class="form-group">
+                    <div class="video-upload-wrapper" id="videoWrapper">
+                        <div class="video-icon">🎥</div>
+                        <p>Record or Upload Video</p>
+                        <div class="video-btns">
+                            <button type="button" class="btn-video" onclick="openCamera()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                                📷 Open Camera
+                            </button>
+                            <button type="button" class="btn-video" onclick="document.getElementById('videoFile').click()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                📁 Upload File
+                            </button>
+                        </div>
+                        <input type="file" id="videoFile" accept="video/*" style="display:none" onchange="handleFileUpload(this)">
+                        <div class="file-name" id="videoFileName"></div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">SUBMIT COMPLAINT</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ─── Footer ─── -->
+    <footer>
+    </footer>
+</div>
+
+<!-- ─── Camera Modal ─── -->
+<div class="modal-overlay" id="cameraModal">
+    <div class="modal-box">
+        <button class="close-modal" onclick="closeCamera()">&times;</button>
+        <h3>📹 RECORD VIDEO</h3>
+        <video id="cameraPreview" autoplay playsinline muted></video>
+        <div class="recording-badge" id="recordingBadge">
+            <span class="dot"></span>
+            <span>RECORDING</span>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal primary" id="recordBtn" onclick="toggleRecording()">🔴 Start Recording</button>
+            <button class="btn-modal secondary" onclick="closeCamera()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── Script ─── -->
+<script>
+(function(){
+    // ─── Check Authentication ───
+    function checkAuth() {
+        const userData = sessionStorage.getItem('currentUser');
+        if (!userData) {
+            window.location.href = 'login.html';
+            return false;
+        }
+        return true;
+    }
+
+    // ─── State Variables ───
+    let mediaStream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let isRecording = false;
+    let videoBlob = null;
+    let videoUrl = null;
+
+    // ─── Form Elements ───
+    const form = document.getElementById('complaintForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('successMsg');
+    
+    // Form fields
+    const complaintType = document.getElementById('complaintType');
+    const empId = document.getElementById('empId');
+    const empName = document.getElementById('empName');
+    const department = document.getElementById('department');
+    const complaintDescription = document.getElementById('complaintDescription');
+    const videoWrapper = document.getElementById('videoWrapper');
+    const videoFileName = document.getElementById('videoFileName');
+
+    // ─── Event Listeners ───
+    form.addEventListener('input', validateForm);
+    form.addEventListener('change', validateForm);
+    form.addEventListener('submit', handleSubmit);
+
+    // ─── Camera Functions ───
+    window.openCamera = async function() {
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: true 
+            });
+            
+            document.getElementById('cameraPreview').srcObject = mediaStream;
+            document.getElementById('cameraPreview').style.display = 'block';
+            document.getElementById('cameraModal').classList.add('active');
+            
+            // Reset recording state
+            isRecording = false;
+            recordedChunks = [];
+            updateRecordButton();
+        } catch(e) {
+            alert('Camera access denied. Please allow camera permission and try again.');
+        }
+    };
+
+    window.closeCamera = function() {
+        stopStream();
+        document.getElementById('cameraModal').classList.remove('active');
+    };
+
+    function stopStream() {
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(t => t.stop());
+            mediaStream = null;
+        }
+    }
+
+    function updateRecordButton() {
+        const btn = document.getElementById('recordBtn');
+        const badge = document.getElementById('recordingBadge');
+        
+        if (isRecording) {
+            btn.innerHTML = '⏹️ Stop Recording';
+            badge.classList.add('active');
+        } else {
+            btn.innerHTML = '🔴 Start Recording';
+            badge.classList.remove('active');
+        }
+    }
+
+    window.toggleRecording = function() {
+        if (!isRecording) {
+            // Start recording
+            recordedChunks = [];
+            mediaRecorder = new MediaRecorder(mediaStream);
+            
+            mediaRecorder.ondataavailable = function(e) {
+                if (e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+            
+            mediaRecorder.onstop = function() {
+                videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+                videoUrl = URL.createObjectURL(videoBlob);
+                
+                // Show video in wrapper
+                videoWrapper.classList.add('has-video');
+                videoFileName.textContent = '✓ Video recorded successfully';
+                
+                // Add video preview
+                let preview = document.getElementById('videoPreview');
+                if (!preview) {
+                    preview = document.createElement('video');
+                    preview.id = 'videoPreview';
+                    preview.className = 'image-preview';
+                    preview.controls = true;
+                    videoWrapper.appendChild(preview);
+                }
+                preview.src = videoUrl;
+                preview.style.display = 'block';
+                
+                closeCamera();
+                validateForm();
+            };
+            
+            mediaRecorder.start();
+            isRecording = true;
+            updateRecordButton();
+        } else {
+            // Stop recording
+            mediaRecorder.stop();
+            isRecording = false;
+            updateRecordButton();
+        }
+    };
+
+    // ─── File Upload ───
+    window.handleFileUpload = function(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            videoBlob = file;
+            videoUrl = URL.createObjectURL(file);
+            
+            // Show video in wrapper
+            videoWrapper.classList.add('has-video');
+            videoFileName.textContent = '✓ ' + file.name;
+            
+            // Add video preview
+            let preview = document.getElementById('videoPreview');
+            if (!preview) {
+                preview = document.createElement('video');
+                preview.id = 'videoPreview';
+                preview.className = 'image-preview';
+                preview.controls = true;
+                videoWrapper.appendChild(preview);
+            }
+            preview.src = videoUrl;
+            preview.style.display = 'block';
+            
+            validateForm();
+        }
+    };
+
+    // ─── Form Validation ───
+    function validateForm() {
+        const isValid = complaintType.value && 
+                       empId.value.trim() && 
+                       empName.value.trim() && 
+                       department.value.trim() && 
+                       complaintDescription.value.trim();
+        
+        submitBtn.disabled = !isValid;
+    }
+
+    // ─── Handle Form Submit ───
+    function handleSubmit(e) {
+        e.preventDefault();
+        
+        const complaints = JSON.parse(localStorage.getItem('complaints') || '[]');
+        
+        const complaint = {
+            id: Date.now().toString(),
+            complaintType: complaintType.value,
+            empId: empId.value.trim(),
+            empName: empName.value.trim(),
+            department: department.value.trim(),
+            complaintDescription: complaintDescription.value.trim(),
+            videoData: videoUrl || null,
+            status: 'Pending',
+            submittedAt: new Date().toISOString(),
+            submittedBy: JSON.parse(sessionStorage.getItem('currentUser')).empId
+        };
+        
+        complaints.push(complaint);
+        localStorage.setItem('complaints', JSON.stringify(complaints));
+        
+        // Show success message
+        successMsg.textContent = '✓ Complaint submitted successfully!';
+        successMsg.classList.add('active');
+        
+        // Reset form after 2 seconds
+        setTimeout(() => {
+            resetForm();
+        }, 2000);
+    }
+
+    // ─── Reset Form ───
+    function resetForm() {
+        form.reset();
+        videoBlob = null;
+        videoUrl = null;
+        videoWrapper.classList.remove('has-video');
+        videoFileName.textContent = '';
+        
+        const preview = document.getElementById('videoPreview');
+        if (preview) {
+            preview.style.display = 'none';
+        }
+        
+        successMsg.classList.remove('active');
+        submitBtn.disabled = true;
+    }
+
+    // ─── Go Back ───
+    window.goBack = function() {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser.role === 'Employee') {
+            window.location.href = 'dashboard.html';
+        } else {
+            window.location.href = 'Administration.html';
+        }
+    };
+
+    // ─── Initialize ───
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        
+        // Pre-fill empId if user is logged in
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser) {
+            empId.value = currentUser.empId;
+            empName.value = currentUser.fullName;
+        }
+    });
+})();
+</script>
+</body>
+</html>
